@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  # The name of our app project (all Apps reference this)
+  name: cluster-infra
+  # The namespace of our app project. Keep it with argocd.
+  namespace: argocd
+spec:
+  # Project description
+  description: Infrastructure project for main cluster items
+  # Control to limit what repos are allowed, helpful for gating developer projects
+  sourceRepos:
+  - '*'
+  # Application destination permissions
+  destinations:
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  # Whitelist of changeable resources at *cluster* scope
+  # clusterResourceWhiteList:
+  # - group: ''
+  #   kind: Namespace
+  #   name: ''
+  # Blacklist of unchangeable resources at *cluster* scope
+  # clusterResourceBlackList:
+  # - group: ''
+  #   kind: Namespace
+  #   name: 'kube-*'
+  # Blacklist of unchangeable resources at *namespace* scope
+  # namespaceResourceBlacklist:
+  # - group: ''
+  #   kind: ResourceQuota
+  # - group: ''
+  #   kind: LimitRange
+  # - group: ''
+  #   kind: NetworkPolicy
+  # Whitelist of changeable resources at *namespace* scope
+  # namespaceResourceWhitelist:
+  # - group: 'apps'
+  #   kind: Deployment
+  # - group: 'apps'
+  #   kind: StatefulSet
