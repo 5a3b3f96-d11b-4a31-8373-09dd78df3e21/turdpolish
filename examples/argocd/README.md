@@ -10,6 +10,9 @@ This file is where I define the ArgoCD project. ArgoCD applications belong to pr
 ### [argocd.yaml](./argocd.yaml)
 This file is where I define the ArgoCD Application. You deploy this once ArgoCD is bootstrapped and set up. It will allow Argo to manage Argo (explained below).
 
+### [argorbac.yaml](./argorbac.yaml)
+Sample configmap for setting up an admin group in Argo (I use SSO we'll cover elsewhere, but this loads the claim from your SSO)
+
 ## Example
 This is a sample Argo app to deploy ArgoCD. It may seem counterproductive, but ArgoCD *managing ArgoCD* is actually a valid and awesome pattern. Your Argo will automatically update itself in line with the helm chart/the repo. This primarily relies on the way deployment rollouts happen where a rollout keeps pods alive until the newest set go live, allowing old Argo to deploy new one until it's healthy then new Argo being healthy kills old Argo.
 
