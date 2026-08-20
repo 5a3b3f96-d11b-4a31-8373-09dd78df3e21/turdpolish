@@ -19,6 +19,10 @@ ESO (not Elder Scrolls Online) is how you should re-think secrets. I use this in
 ### [Harbor](https://github.com/harbor-framework/harbor)
 Harbor is kind of the go-to for OCI image hosting in the projects I've worked on. It hooks in with Trivy for scanning and has a ton of neat automation capabilities. Highly recommend this, it also helps with those pesky docker pull limits when nodes don't cache enough.
 
+## Identity Platforms
+### [Keycloak](https://github.com/keycloak/keycloak)
+Keycloak is a pretty standard IdP. They support [FIPS 140-2](https://www.keycloak.org/server/fips#_keycloak_server_in_fips_mode_in_containers) compliant modes and they can be very helpful as far as syncing users from somewhere (LDAP, etc) and managing an identity for other apps. A lot of the apps in K8s will sync via OIDC so having an IdP is helpful giving people a single sign-on for all the apps they use. I use passkeys for login in my stuff so everything is kept on a physical FIDO key I enroll that takes a pin (Yubikey, phones, browsers, lots of things support passkeys) so I have 2-factor (key = something you have + pin = something you know) auth. Supports multifactor using something like a Yubikey as the second factor to a password login with LDAP as well.
+
 ## Security
 ### [Copa](https://github.com/project-copacetic/copacetic)
 Copa allows us to patch/remediate simple packages through upgrades in docker images using CVE reports--super helpful!
