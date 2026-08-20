@@ -1,0 +1,35 @@
+# Basic header
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # The name of the application
+  name: argocd
+  # This is the namespace for the *APPLICATION OBJECT*, not the install destination.
+  # Keeping it in ArgoCD makes it easy.
+  # Deleting a NS doesn't delete the app (it will redeploy) and can be helpful.
+  namespace: argocd
+spec:
+  # I put this into a project I call cluster-infra
+  project: cluster-infra
+  destination:
+    # I want this helm chart to be installed into the argocd namespace
+    namespace: argocd
+    # This is installing into our cluster (99% of the time, you want this)
+    server: https://kubernetes.default.svc
+  source:
+    # Path in the repo for the helm chart
+    path: charts/argocd
+    # URL for the helm repo
+    repoURL: https://github.com/argoproj/argo-helm/tree/main/charts
+    # Branch of the repo we're targetting
+    targetRevision: main
+    helm:
+      # Name: https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/Chart.yaml
+      releaseName: argo-cd
+      # Values section can be used to set values in a block like this, just like a values file
+      values: |
+        value: result
+        otherValue: otherInfo
+      # Use a values file like this. I find the values block easier, but this is doable.
+      valueFiles:
+      - values-prod.yaml
