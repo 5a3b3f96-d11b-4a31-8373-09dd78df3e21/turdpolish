@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app
+  namespace: argocd
+  # This puts this application at "0" index during sync operations
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  # cluster infra project
+  project: cluster-infra
+  source:
+    # Our turdpolish repo
+    repoURL: https://github.com/5a3b3f96-d11b-4a31-8373-09dd78df3e21/turdpolish.git
+    # A demo umbrella chart (this is how we install all apps in waves and enable/disable them)
+    path: examples/argocd/app-of-apps/umbrella
+    # We're using the main branch of the repo
+    targetRevision: main
+    helm:
+      # Demo umbrella chart name
+      releaseName: infra-umbrella
+  destination:
+    # Install in our local cluster
+    server: https://kubernetes.default.svc
+    # Install in the argocd namespace
+    namespace: argocd
+  syncPolicy:
+    automated:
+      # If something isn't in the git repo, delete it automatically
+      prune: true
+      # If something is in the git repo, add it automatically
+      selfHeal: true
+    syncOptions:
+      # Let argo make the namespaces it needs to
+      - CreateNamespace=true
+      # Avoid client-side limitations on field lengths and other stuff
+      - ServerSideApply=true
+      # Skip anything without a CRD and retry it during selfheal
+      - SkipDryRunOnMissingResource=true
