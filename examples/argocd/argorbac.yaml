@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namesace: argocd
+data:
+  # Docs here: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/
+  # Use docs for more complicated perms. Very, very robust.
+  # Line that starts with p says:
+  #   p (assign policy) to role:admin, all resources, all actions, all objects, allow actions
+  #   g (assign group to role), argocd-admins (group), role:admin (role)
+  #
+  # The end result is that all argocd-admins group members have full admin here.
+  policy.csv: |
+    p, role:admin, *, *, *, allow
+    g, argocd-admins, role:admin
+  # Default policy is nothing which prevents "oops all admin"
+  policy.default: ''
+  # We match the policy based on globs
+  policy.matchMode: glob
+  # We use the groups scope from our SSO users to bind policy
+  scopes: '[groups]'
