@@ -37,7 +37,6 @@ The "easy/simple" method for denying access to your cluster for naughty develope
 Remember Cilium and Hubble? Now Tetragon. eBPF efficiency meets helpful runtime behavior policies. Rules like "detect-shell-in-pod" which allow you to either audit shell executions into pods or just automatically kill them. Falco is pretty popular in industry, but it mostly detects/alerts so I choose Tetragon. Less CPU utilization, active prevention, and they didn't scream Sysdig at me waving a $20 bill as a prize in a convention center.
 
 ## Monitoring
-These are all linked below, but usually you install them 
 ### [Prometheus](https://github.com/prometheus/prometheus) / [Thanos](https://github.com/thanos-io/thanos)
 Prometheus collects events as a time series, allowing scraping/storing of large amounts of data. Thanos extends Prometheus to higher availability and better support for things like S3 backing storage.
 
