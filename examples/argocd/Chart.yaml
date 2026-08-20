@@ -1,0 +1,14 @@
+apiVersion: v2
+name: argocd
+description: Argo CD basic installer
+type: application
+version: 0.1.0
+
+dependencies:
+  - name: argo-cd
+    # This is the real ArgoCD version. We point dependabot here to do automatic upgrades!
+    version: "10.4.0"
+    # Argo OCI repo (backed by: https://github.com/argoproj/argo-helm/tree/main)
+    repository: https://argoproj.github.io/argo-helm
+    # This is the conditional we use to turn on/off argocd
+    condition: argo-cd.enabled
