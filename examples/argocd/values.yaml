@@ -1,0 +1,51 @@
+# Values file is here: https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
+# All values defined there with extra docs
+
+# These are the defaults for how we install argocd
+argo-cd:
+  # We default to enabling Argo-CD. This can be overridden by setting false in main values file.
+  enabled: True
+
+# These (globa/configs) can be kept under argo-cd
+# You'd need a helper to get the variables in the right area if you did that
+# I have done this and could write a guide, but unless you need to
+# it's extra development that isn't worth it
+global:
+  domain: your.domain.without.https
+
+configs:
+  params:
+    # If you have server.insecure false it disables TLS
+    # If you terminate TLS at the gateway/ingress having TLS at the app will break the webpage
+    server.insecure: "true"
+    # You don't have to enable this, but Kyverno needs it
+    # Without this, Kyverno will fight Argo forever
+    controller.diff.server.side: "true"
+  cm:
+    # The OIDC using our Keycloak setup, make sure to replace the issuer with your real issuer
+    # This is specifically PKCE so you're not using a clientID/secret
+    # PKCE is more secure/newer and works with an advertisement, but you can swap for older OIDC
+    oidc.config: |
+      name: Keycloak
+      issuer: https://keycloak.example.com/realms/master
+      clientID: argocd
+      enablePKCEAuthentication: true
+      refreshTokenThreshold: 2m
+      requestedScopes: ["openid", "profile", "email", "groups", "offline_access"]
+    # This enables helm usage within Argo so we can do our custom apps
+    kustomize.buildOptions: --enable-helm
+    # This is the custom LUA I mention in the guide section
+    # It makes it so that argo waits on sync waves for the apps to be healthy
+    resource.customizations.health.argoproj.io_Application: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          if obj.status.health.message ~= nil then
+            hs.message = obj.status.health.message
+          end
+        end
+      end
+      return hs
