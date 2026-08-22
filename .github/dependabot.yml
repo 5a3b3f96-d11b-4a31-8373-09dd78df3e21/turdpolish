@@ -1,0 +1,7 @@
+updates:
+  - package-ecosystem: "helm"
+    directories:
+      - /examples/argocd
+    target-branch: main
+    schedule:
+      interval: "weekly"
